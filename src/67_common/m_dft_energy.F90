@@ -810,7 +810,7 @@ subroutine energy(cg,compch_fft,constrained_dft,dtset,electronpositron,&
 &   energies%e_xcdc + energies%e_corepsp - energies%e_corepspdc
    if (psps%usepaw==1) etotal=etotal + energies%e_pawdc
  end if
- etotal = etotal + energies%e_ewald + energies%e_chempot + energies%e_vdw_dftd
+ etotal = etotal + energies%e_ewald + energies%e_chempot + energies%e_vdw_dftd + energies%e_vdw_xdm
  if(dtset%occopt>=3 .and. dtset%occopt<=8) etotal=etotal-dtset%tsmear*energies%entropy
 
 !Additional stuff for electron-positron

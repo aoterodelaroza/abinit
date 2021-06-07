@@ -171,6 +171,9 @@ module m_energies
   real(dp) :: e_vdw_dftd=zero
    ! Dispersion energy from DFT-D Van der Waals correction (hartree)
 
+  real(dp) :: e_vdw_xdm=zero
+   ! Dispersion energy from XDM (hartree)
+
   real(dp) :: e_xc=zero
    ! Exchange-correlation energy (hartree)
 
@@ -263,6 +266,7 @@ subroutine energies_init(energies)
  energies%e_pawdc       = zero
  energies%e_sicdc       = zero
  energies%e_vdw_dftd    = zero
+ energies%e_vdw_xdm     = zero
  energies%e_xc          = zero
  energies%e_xcdc        = zero
  energies%e_xc_vdw      = zero
@@ -338,6 +342,7 @@ end subroutine energies_init
  energies_out%e_pawdc              = energies_in%e_pawdc
  energies_out%e_sicdc              = energies_in%e_sicdc
  energies_out%e_vdw_dftd           = energies_in%e_vdw_dftd
+ energies_out%e_vdw_xdm            = energies_in%e_vdw_xdm
  energies_out%e_xc                 = energies_in%e_xc
  energies_out%e_xcdc               = energies_in%e_xcdc
  energies_out%e_xc_vdw             = energies_in%e_xc_vdw
@@ -419,12 +424,13 @@ end subroutine energies_copy
    energies_array(28)=energies%e_pawdc
    energies_array(29)=energies%e_sicdc
    energies_array(30)=energies%e_vdw_dftd
-   energies_array(31)=energies%e_xc
-   energies_array(32)=energies%e_xcdc
-   energies_array(33)=energies%e_xc_vdw
-   energies_array(34)=energies%h0
-   energies_array(35)=energies%e_zeeman
-   energies_array(36)=energies%e_nucdip
+   energies_array(31)=energies%e_vdw_xdm
+   energies_array(32)=energies%e_xc
+   energies_array(33)=energies%e_xcdc
+   energies_array(34)=energies%e_xc_vdw
+   energies_array(35)=energies%h0
+   energies_array(36)=energies%e_zeeman
+   energies_array(37)=energies%e_nucdip
  end if
 
  if (option==-1) then
@@ -458,12 +464,13 @@ end subroutine energies_copy
    energies%e_pawdc              = energies_array(28)
    energies%e_sicdc              = energies_array(29)
    energies%e_vdw_dftd           = energies_array(30)
-   energies%e_xc                 = energies_array(31)
-   energies%e_xcdc               = energies_array(32)
-   energies%e_xc_vdw             = energies_array(33)
-   energies%h0                   = energies_array(34)
-   energies%e_zeeman             = energies_array(35)
-   energies%e_nucdip             = energies_array(36)
+   energies%e_vdw_xdm            = energies_array(31)
+   energies%e_xc                 = energies_array(32)
+   energies%e_xcdc               = energies_array(33)
+   energies%e_xc_vdw             = energies_array(34)
+   energies%h0                   = energies_array(35)
+   energies%e_zeeman             = energies_array(36)
+   energies%e_nucdip             = energies_array(37)
  end if
 
 end subroutine energies_to_array
@@ -561,7 +568,7 @@ end subroutine energies_to_array
 
    if (dtset%berryopt==4 .or. dtset%berryopt==6 .or. dtset%berryopt==7 .or.  &
 &   dtset%berryopt==14 .or. dtset%berryopt==16 .or. dtset%berryopt==17) eint=eint+energies%e_elecfield    !!HONG
-   eint = eint + energies%e_ewald + energies%e_chempot + energies%e_vdw_dftd
+   eint = eint + energies%e_ewald + energies%e_chempot + energies%e_vdw_dftd + energies%e_vdw_xdm
    if (positron) eint=eint+energies%e0_electronpositron+energies%e_electronpositron
  end if
  if (optdc>=1) then
@@ -571,7 +578,7 @@ end subroutine energies_to_array
    if (usepaw==1) eintdc = eintdc + energies%e_pawdc
    if (dtset%berryopt==4 .or. dtset%berryopt==6 .or. dtset%berryopt==7 .or.  &
 &   dtset%berryopt==14 .or. dtset%berryopt==16 .or. dtset%berryopt==17) eintdc = eintdc + energies%e_elecfield
-   eintdc = eintdc + energies%e_ewald + energies%e_chempot + energies%e_vdw_dftd + energies%e_constrained_dft
+   eintdc = eintdc + energies%e_ewald + energies%e_chempot + energies%e_vdw_dftd  + energies%e_vdw_xdm + energies%e_constrained_dft
    if (positron) eintdc=eintdc-energies%edc_electronpositron &
 &   +energies%e0_electronpositron+energies%e_electronpositron
  end if
@@ -644,7 +651,7 @@ subroutine energies_ncwrite(enes, ncid)
   "e_exactX","e_fermie", &
   "e_fock", "e_fockdc", "e_fock0", "e_hartree", "e_hybcomp_E0", "e_hybcomp_v0", "e_hybcomp_v", "e_kinetic",&
   "e_localpsp", "e_magfield", "e_monopole", "e_nlpsp_vfock", "e_nucdip", &
-  "e_paw", "e_pawdc", "e_sicdc", "e_vdw_dftd", &
+  "e_paw", "e_pawdc", "e_sicdc", "e_vdw_dftd", "e_vdw_xdm",&
   "e_xc", "e_xcdc", "e_xc_vdw", &
   "h0","e_zeeman", "e_fermih"], & ! CP added fermih 
   [enes%e_chempot, enes%e_constrained_dft, enes%e_corepsp, enes%e_corepspdc, enes%e_eigenvalues, enes%e_elecfield, &
@@ -654,7 +661,7 @@ subroutine energies_ncwrite(enes, ncid)
    enes%e_fock, enes%e_fockdc,enes%e_fock0,  enes%e_hartree, &
    enes%e_hybcomp_E0, enes%e_hybcomp_v0, enes%e_hybcomp_v, enes%e_kinetic,&
    enes%e_localpsp, enes%e_magfield, enes%e_monopole, enes%e_nlpsp_vfock, enes%e_nucdip, &
-   enes%e_paw, enes%e_pawdc, enes%e_sicdc, enes%e_vdw_dftd,&
+   enes%e_paw, enes%e_pawdc, enes%e_sicdc, enes%e_vdw_dftd, enes%e_vdw_xdm, &
    enes%e_xc, enes%e_xcdc, enes%e_xc_vdw,&
    enes%h0,enes%e_zeeman,enes%e_fermih]) ! CP added fermih
  ! End CP modified

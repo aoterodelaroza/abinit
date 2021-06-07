@@ -327,6 +327,7 @@ subroutine setvtr(atindx1,dtset,energies,gmet,gprimd,grchempottn,grewtn,grvdw,gs
    grchempottn=zero
    grewtn=zero
    energies%e_vdw_dftd=zero
+   energies%e_vdw_xdm=zero
    if (ngrvdw>0) grvdw=zero
  end if
  call timab(5,2,tsec)

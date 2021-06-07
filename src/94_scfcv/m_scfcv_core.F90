@@ -119,6 +119,7 @@ module m_scfcv_core
  use m_cgprj,            only : ctocprj
  use m_psolver,          only : psolver_rhohxc
  use m_paw2wvl,          only : paw2wvl_ij, wvl_cprjreorder
+ use m_vdw_xdm,          only : vdw_xdm
 
  implicit none
 
@@ -2071,6 +2072,11 @@ subroutine scfcv_core(atindx,atindx1,cg,cprj,cpus,dmatpawu,dtefield,dtfil,dtorbm
 !Additional steps after SC iterations, including force, stress, polarization calculation
 !----------------------------------------------------------------------
 
+ ! calculate the XDM contributions to the energy
+ if (dtset%vdw_xc==8) then
+    call vdw_xdm(energies%e_vdw_xdm)
+ end if
+
  if (dtset%userec==1) then
    call prtene(dtset,energies,ab_out,psps%usepaw)
    call prtene(dtset,energies,std_out,psps%usepaw)
@@ -2144,7 +2150,7 @@ subroutine scfcv_core(atindx,atindx1,cg,cprj,cpus,dmatpawu,dtefield,dtfil,dtorbm
  enonlocalpsp=energies%e_nlpsp_vfock-2.0d0*energies%e_fock0
  esum=energies%e_kinetic+energies%e_ewald+energies%e_corepsp+energies%e_hartree+energies%e_xc&
  &+energies%e_localpsp+enonlocalpsp+energies%e_fock0&
- &+energies%e_hybcomp_E0+energies%e_hybcomp_v0+energies%e_hybcomp_v+energies%e_vdw_dftd&
+ &+energies%e_hybcomp_E0+energies%e_hybcomp_v0+energies%e_hybcomp_v+energies%e_vdw_dftd+energies%e_vdw_xdm&
  &+energies%e_elecfield+energies%e_magfield
 
  write(std_out,'(a,2(es16.6,a))')' Ekinetic   = : ',energies%e_kinetic    ,' Ha ,',energies%e_kinetic*Ha_eV    ,' eV'
@@ -2158,6 +2164,9 @@ subroutine scfcv_core(atindx,atindx1,cg,cprj,cpus,dmatpawu,dtefield,dtfil,dtorbm
  write(std_out,'(a,2(es16.6,a))')' Exc_ks     = : ',energies%e_xc         ,' Ha ,',energies%e_xc*Ha_eV         ,' eV'
  if(abs(energies%e_vdw_dftd)>1.0d-6) then
    write(std_out,'(a,2(es16.6,a))')' EvdW-D     = : ',energies%e_vdw_dftd   ,' Ha ,',energies%e_vdw_dftd*Ha_eV   ,' eV'
+ endif
+ if(abs(energies%e_vdw_xdm)>1.0d-10) then
+   write(std_out,'(a,2(es16.6,a))')' EXDM       = : ',energies%e_vdw_xdm   ,' Ha ,',energies%e_vdw_xdm*Ha_eV   ,' eV'
  endif
  if(abs(energies%e_elecfield)>1.0d-6) then
    write(std_out,'(a,2(es16.6,a))')' Eefield    = : ',energies%e_elecfield  ,' Ha ,',energies%e_elecfield*Ha_eV  ,' eV'

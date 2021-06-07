@@ -1563,6 +1563,9 @@ subroutine prtene(dtset,energies,iout,usepaw)
      if ((dtset%vdw_xc>=5.and.dtset%vdw_xc<=7).and.ipositron/=1) then
        call edoc%add_real('VdWaals_dft_d', energies%e_vdw_dftd)
      end if
+     if (dtset%vdw_xc==8.and.ipositron/=1) then
+       call edoc%add_real('VdWaals_xdm', energies%e_vdw_xdm)
+     end if
      if (dtset%nzchempot>=1) then
        call edoc%add_real('chem_potential', energies%e_chempot)
      end if
@@ -1637,6 +1640,9 @@ subroutine prtene(dtset,energies,iout,usepaw)
    end if
    if ((dtset%vdw_xc>=5.and.dtset%vdw_xc<=7).and.ipositron/=1) then
      call dc_edoc%add_real('VdWaals_dft_d', energies%e_vdw_dftd)
+   end if
+   if (dtset%vdw_xc==8.and.ipositron/=1) then
+      call dc_edoc%add_real('VdWaals_xdm', energies%e_vdw_xdm)
    end if
    if (dtset%nzchempot>=1) then
      call dc_edoc%add_real('chem_potential', energies%e_chempot)

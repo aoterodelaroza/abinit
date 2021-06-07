@@ -506,7 +506,7 @@ subroutine odamix(deltae,dtset,elast,energies,etotal,&
 !etotal = energies%e_eigenvalues - energies%e_hartree + energies%e_xc - &
 !& energies%e_xcdc + energies%e_corepsp + &
 !& energies%e_entropy + energies%e_elecfield
- etotal = etotal + energies%e_ewald + energies%e_chempot + energies%e_vdw_dftd
+ etotal = etotal + energies%e_ewald + energies%e_chempot + energies%e_vdw_dftd + energies%e_vdw_xdm
  if (usepaw==1) then
    etotal = etotal + energies%e_paw
  end if
@@ -626,7 +626,7 @@ subroutine odamix(deltae,dtset,elast,energies,etotal,&
 
  etotal=energies%h0+energies%e_hartree+energies%e_xc+energies%e_corepsp + &
 & energies%e_entropy + energies%e_elecfield + energies%e_magfield
- etotal = etotal + energies%e_ewald + energies%e_chempot + energies%e_vdw_dftd
+ etotal = etotal + energies%e_ewald + energies%e_chempot + energies%e_vdw_dftd + energies%e_vdw_xdm
  if (usepaw==1) then
    do iatom=1,my_natom
      itypat=paw_ij(iatom)%itypat

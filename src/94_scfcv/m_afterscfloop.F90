@@ -251,6 +251,7 @@ contains
 !!   | e_chempot(IN)=energy from spatially varying chemical potential (hartree)
 !!   | e_ewald(IN)=Ewald energy (hartree)
 !!   | e_vdw_dftd(IN)=VdW DFT-D energy
+!!   | e_vdw_xdm(IN)=VdW XDM energy
 !!   | e_hartree(IN)=Hartree part of total energy (hartree units)
 !!   | e_corepsp(IN)=psp core-core energy
 !!   | e_hybcomp_E0=energy compensation term for hybrid exchange-correlation energy (hartree) at fixed density
