@@ -1,3 +1,21 @@
+!!****m* ABINIT/m_vdw_xdm
+!! NAME
+!!  m_vdw_xdm
+!!
+!! FUNCTION
+!!
+!! COPYRIGHT
+!!  Copyright (C) 2008-2021 ABINIT group (MT)
+!!  This file is distributed under the terms of the
+!!  GNU General Public License, see ~abinit/COPYING
+!!  or http://www.gnu.org/copyleft/gpl.txt .
+!!
+!! PARENTS
+!!
+!! CHILDREN
+!!
+!! SOURCE
+
 #if defined HAVE_CONFIG_H
 #include "config.h"
 #endif
